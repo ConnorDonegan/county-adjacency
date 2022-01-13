@@ -1,4 +1,4 @@
-*.html
+.Rhistory
 man/
 README_files/
 *~
