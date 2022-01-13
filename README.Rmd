@@ -22,21 +22,22 @@ This repository contains the adjacency structure for US counties. The informatio
 ```{r}
 library(Matrix)
 library(readr)
-A <- readr::read_rds("county-connectivity.rds")
+A <- readr::read_rds("county-connectivity-2019.rds")
 class(A)
 ```
 Or:
-```{r}
-url <- "https://github.com/ConnorDonegan/county-adjacency/raw/main/county-connectivity.rds"
+```{r eval = FALSE}
+url <- "https://github.com/ConnorDonegan/county-adjacency/raw/main/county-connectivity-2019.rds"
 A <- readr::read_rds(url)
-class(A)
 ```
 The county FIPS codes (GEOIDs) are strored in the column and row names so that the adjacency structure can be properly aligned to other data sets:
 ```{r}
 head(colnames(A))
 head(rownames(A))
 ```
-The file was created by calling `spdep::poly2nb` on the county shapefile returned by `tigris::counties()`, dropping U.S. territories, and connecting the islands of Hawaii to each other.
+The file `make-county-adjacency-file.R` can be used (with some caution) to reproduce this for any year, 2010-2019 (and futher on as they become available). There are some slight changes over time in US counties.
+
+The adjacency file was created by calling `spdep::poly2nb` on the county shapefile returned by `tigris::counties(year = 2019)`, dropping U.S. territories, and connecting the islands of Hawaii to each other.
 
 The following code visualizes the connectivity structure:
 ```{r}
