@@ -17,6 +17,17 @@ class(A)
 #> [1] "Matrix"
 ```
 
+Or:
+
+``` r
+url <- "https://github.com/ConnorDonegan/county-adjacency/raw/main/county-connectivity.rds"
+A <- readr::read_rds(url)
+class(A)
+#> [1] "dgCMatrix"
+#> attr(,"package")
+#> [1] "Matrix"
+```
+
 The county FIPS codes (GEOIDs) are strored in the column and row names
 so that the adjacency structure can be properly aligned to other data
 sets:
@@ -53,4 +64,4 @@ nb <- spdep::graph2nb(G)
 plot(nb, sf::st_geometry(sdf))
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />

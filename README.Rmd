@@ -25,6 +25,12 @@ library(readr)
 A <- readr::read_rds("county-connectivity.rds")
 class(A)
 ```
+Or:
+```{r}
+url <- "https://github.com/ConnorDonegan/county-adjacency/raw/main/county-connectivity.rds"
+A <- readr::read_rds(url)
+class(A)
+```
 The county FIPS codes (GEOIDs) are strored in the column and row names so that the adjacency structure can be properly aligned to other data sets:
 ```{r}
 head(colnames(A))
