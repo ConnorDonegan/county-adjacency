@@ -1,0 +1,54 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  eval = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5,
+  fig.align = 'center'
+)
+```
+
+# County Adjacency File
+
+This repository contains the adjacency structure for US counties. The information is stored in a `.rds` file, to be read into R using the `Matrix` package as follows:
+
+```{r}
+library(Matrix)
+library(readr)
+A <- readr::read_rds("county-connectivity.rds")
+class(A)
+```
+The county FIPS codes (GEOIDs) are strored in the column and row names so that the adjacency structure can be properly aligned to other data sets:
+```{r}
+head(colnames(A))
+head(rownames(A))
+```
+The file was created by calling `spdep::poly2nb` on the county shapefile returned by `tigris::counties()`, dropping U.S. territories, and connecting the islands of Hawaii to each other.
+
+The following code visualizes the connectivity structure:
+```{r}
+library(tigris)
+library(sf)
+sdf <- counties() %>%
+    dplyr::filter(as.numeric(STATEFP) < 57) %>%
+    shift_geometry(preserve_area = TRUE)
+
+E <- Matrix::summary(Matrix::Matrix(A))
+E <- E[which(E$i < E$j), ]
+G <- list(np = nrow(A), # confrom to spdep graph structure, then back to nb to map it 
+          from = E$i,
+          to = E$j,
+          nedges = nrow(E)
+          )
+class(G) <- "Graph"
+nb <- spdep::graph2nb(G)
+plot(nb, sf::st_geometry(sdf))
+```
+
